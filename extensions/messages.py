@@ -2,7 +2,6 @@
 Provides log coverage of message-related events.
 """
 
-from discord.ext import commands
 from discord.ext.commands import Cog
 
 from utils.decorators import server_configured
