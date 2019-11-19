@@ -16,7 +16,7 @@ class MessageLog(Cog):
     @Cog.listener()
     @server_configured
     async def on_message_edit(self, before, after, log_channel):
-        msg = f'📝 **Message Edited** (ID: `{before.id}`)\n' \
+        msg = f'📝 `{now()}` **Message Edited** (ID: `{before.id}`)\n' \
               f'**Channel:** {before.channel.mention} (`{before.channel.id}`)\n' \
               f'**Author:** {before.author} (`{before.author.id}`)\n' \
               f'**Before:** {before.clean_content}\n' \
@@ -26,7 +26,7 @@ class MessageLog(Cog):
     @Cog.listener()
     @server_configured
     async def on_message_delete(self, message, log_channel):
-        msg = f'📝 **Message Deleted** (ID: `{message.id}`)\n' \
+        msg = f'📝 `{now()}` **Message Deleted** (ID: `{message.id}`)\n' \
               f'**Channel:** {message.channel.mention} (`{message.channel.id}`)\n' \
               f'**Author:** {message.author} (`{message.author.id}`)\n' \
               f'**Content:** {message.clean_content}'

@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import Cog
 
 from utils.decorators import server_configured
+from utils.time import now
 
 
 class GuildLog(commands.Cog):
@@ -19,27 +20,65 @@ class GuildLog(commands.Cog):
 
     @Cog.listener()
     @server_configured
-    async def on_guild_update(self, before, after):
-        print('hi mom')
+    async def on_guild_update(self, before, after, log_channel):
+        msg = f'🌐 `{now()}` **Guild Updated**\n'
+
+        if before.name != after.name:
+            msg += f'**Name:** {before.name} **->** {after.name}\n'
+
+        if before.region != after.region:
+            msg += f'**Region:** {before.region} **->** {after.region}\n'
+
+        if before.icon != after.icon:
+            msg += f'**Icon:** <{before.icon_url}> **->** <{after.icon_url}>\n'
+
+        await log_channel.send(msg)
 
     @Cog.listener()
-    async def on_member_join(self, member):
+    @server_configured
+    async def on_guild_emojis_update(self, guild, before, after, log_channel):
+        msg = f'🌐 `{now()}` **Emojis Updated**\n'
+        added = next((e for e in after if e not in before), None)
+        removed = next((e for e in before if e not in after), None)
+
+        if added:
+            msg += f'Added {added}\n'
+
+        if removed:
+            msg += f'Removed {removed.name} (`{removed.id}`)\n'
+
+        await log_channel.send(msg)
+
+    @Cog.listener()
+    @server_configured
+    async def on_member_join(self, member, log_channel):
+        msg = f'✅ `{now()}` **Member Joined**\n' \
+              f'**Member:** {member} (`{member.id}`)\n' \
+              f'**Total Members:** `{member.guild.member_count}`'
+        await log_channel.send(msg)
+        # track invites and sync
+
+    @Cog.listener()
+    @server_configured
+    async def on_member_remove(self, member, log_channel):
+        msg = f'✅ `{now()}` **Member Left/Kicked**\n' \
+              f'**Member:** {member} (`{member.id}`)\n' \
+              f'**Total Members:** `{member.guild.member_count}`'
+        await log_channel.send(msg)
+
+    @Cog.listener()
+    @server_configured
+    async def on_member_update(self, before, after, log_channel):
         ...
 
     @Cog.listener()
-    async def on_member_remove(self, member):
+    @server_configured
+    async def on_member_ban(self, guild, member, log_channel):
         ...
 
     @Cog.listener()
-    async def on_member_update(self, before, after):
-        ...
-
-    @Cog.listener()
-    async def on_member_ban(self, guild, member):
-        ...
-
-    @Cog.listener()
-    async def on_member_unban(self, guild, member):
+    @server_configured
+    async def on_member_unban(self, guild, member, log_channel):
         ...
 
 
