@@ -30,7 +30,7 @@ class GuildLog(commands.Cog):
             msg += f'**Region:** {before.region} **->** {after.region}\n'
 
         if before.icon != after.icon:
-            msg += f'**Icon:** <{before.icon_url}> **->** <{after.icon_url}>\n'
+            msg += f'**Icon:** <{before.icon_url}> **->** <{after.icon_url}>'
 
         await log_channel.send(msg)
 
@@ -69,17 +69,53 @@ class GuildLog(commands.Cog):
     @Cog.listener()
     @server_configured
     async def on_member_update(self, before, after, log_channel):
-        ...
+        msg = f'🙎🏽 `{now()}` **Member Updated**\n' \
+              f'**Member:** {before} (`{before.id}`)\n'
+
+        changes = False
+
+        if before.name != after.name:
+            changes = True
+            msg += f'**Username:** {before.name} **->** {after.name}\n'
+
+        if before.nick != after.nick:
+            changes = True
+            msg += f'**Nickname:** {before.nick} **->** {after.nick}\n'
+
+        if before.roles != after.roles:
+            changes = True
+            msg += '**Roles:**\n'
+            added = [r.name for r in after.roles if r not in before.roles]
+            removed = [r.name for r in before.roles if r not in after.roles]
+
+            if added:
+                msg += f'• Added: {", ".join(added)}\n'
+
+            if removed:
+                msg += f'• Removed: {", ".join(removed)}\n'
+
+        if not before.bot and before.avatar != after.avatar:
+            changes = True
+            msg += f'**Avatar:** <{before.avatar_url}> **->** <{after.avatar_url}>'
+
+        if changes:
+            await log_channel.send(msg)
 
     @Cog.listener()
     @server_configured
     async def on_member_ban(self, guild, member, log_channel):
-        ...
+        msg = f'🔨 `{now()}` **Member Banned**\n' \
+              f'**Member:** {member} (`{member.id}`)'
+
+        await log_channel.send(msg)
 
     @Cog.listener()
     @server_configured
     async def on_member_unban(self, guild, member, log_channel):
-        ...
+        msg = f'🕊 `{now()}` **Member Unbanned**\n' \
+              f'**Member:** {member} (`{member.id}`)'
+
+        await log_channel.send(msg)
 
 
 def setup(bot):
