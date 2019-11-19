@@ -29,12 +29,9 @@ class Configuration(Cog):
     @commands.guild_only()
     async def channel(self, ctx, channel: discord.TextChannel):
         """ Sets the channel used for logging events. """
-        config.update_one(
-            {'_id': str(ctx.guild.id)},
-            {'$set': {
-                'channel': str(channel.id)
-            }},
-            True)
+        config.update_one({'_id': str(ctx.guild.id)},
+                          {'$set': {'channel': str(channel.id)}},
+                          True)
         await ctx.send(f'Channel set to {channel.mention}')
 
     @commands.command()
