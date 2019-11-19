@@ -5,10 +5,6 @@ from discord import Guild
 from utils.db import config
 
 
-def no_op():
-    pass
-
-
 def server_configured(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
@@ -16,7 +12,7 @@ def server_configured(func):
 
         if not e:
             print(f'[SUSPICIOUS] No entities passed to {func.__name__} are, or contain a `Guild`!')
-            return no_op()
+            return
 
         if hasattr(e, 'guild'):
             e = e.guild
@@ -27,8 +23,12 @@ def server_configured(func):
         if g_conf and g_conf.get('channel') is not None:
             log_channel_id = int(g_conf['channel'])
             log_channel = next(c for c in e.text_channels if c.id == log_channel_id)
-            return await func(*args, **kwargs, log_channel=log_channel)
 
-        return no_op()  # Guild has no config, or existing log channel.
+            if 'log_channel' in func.__code__.co_varnames:
+                return await func(*args, **kwargs, log_channel=log_channel)
+
+            return await func(*args, **kwargs)
+
+        return  # Guild has no config, or existing log channel.
 
     return wrapper

@@ -17,8 +17,8 @@ class GuildLog(commands.Cog):
     async def on_ready(self):
         print('Connected to discord!!!')
 
-    @server_configured
     @Cog.listener()
+    @server_configured
     async def on_guild_update(self, before, after):
         print('hi mom')
 
