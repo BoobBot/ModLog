@@ -5,7 +5,7 @@ from discord import Guild
 from utils.db import config
 
 
-async def no_op(*args, **kwargs):
+def no_op():
     pass
 
 
@@ -16,7 +16,7 @@ def server_configured(func):
 
         if not e:
             print(f'[SUSPICIOUS] No entities passed to {func.__name__} are, or contain a `Guild`!')
-            return await no_op()
+            return no_op()
 
         if hasattr(e, 'guild'):
             e = e.guild
@@ -29,6 +29,6 @@ def server_configured(func):
             log_channel = next(c for c in e.text_channels if c.id == log_channel_id)
             return await func(*args, **kwargs, log_channel=log_channel)
 
-        return await no_op()  # Guild has no config, or existing log channel.
+        return no_op()  # Guild has no config, or existing log channel.
 
     return wrapper
