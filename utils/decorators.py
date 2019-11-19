@@ -22,7 +22,10 @@ def server_configured(func):
 
         if g_conf and g_conf.get('channel') is not None:
             log_channel_id = int(g_conf['channel'])
-            log_channel = next(c for c in e.text_channels if c.id == log_channel_id)
+            log_channel = next((c for c in e.text_channels if c.id == log_channel_id), None)
+
+            if not log_channel:
+                return
 
             if 'log_channel' in func.__code__.co_varnames:
                 return await func(*args, **kwargs, log_channel=log_channel)
