@@ -50,13 +50,13 @@ class Configuration(Cog):
         g_conf = config.find_one({'_id': str(ctx.guild.id)})
 
         if not g_conf or not g_conf['channel']:
-            await ctx.send('Logging is not enabled in this server.')
+            return await ctx.send('Logging is not enabled in this server.')
 
         channel_id = int(g_conf['channel'])
         channel = next((c for c in ctx.guild.text_channels if c.id == channel_id), None)
 
         if not channel:
-            await ctx.send('Logging was previously enabled in the server, but the channel no longer exists.')
+            return await ctx.send('Logging was previously enabled in the server, but the channel no longer exists.')
 
         await ctx.send(f'Currently logging to {channel.mention}')
 
