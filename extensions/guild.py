@@ -115,7 +115,7 @@ class GuildLog(commands.Cog):
         invite = await self.determine_used_invite(member.guild)
 
         if invite is not None:
-            msg += f'**Invite Used:** {invite.code}\n'
+            msg += f'**Invite Used:** `{invite.code}` (`{invite.uses}` uses, created by {invite.inviter} (`{invite.inviter.id}`))\n'
 
         msg += f'**Total Members:** `{member.guild.member_count}`'
         await log_channel.send(msg)
