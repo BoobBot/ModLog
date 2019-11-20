@@ -123,7 +123,7 @@ class GuildLog(commands.Cog):
     @Cog.listener()
     @server_configured
     async def on_member_remove(self, member, log_channel):
-        msg = f'✅ `{now()}` **Member Left/Kicked**\n' \
+        msg = f'❎ `{now()}` **Member Left/Kicked**\n' \
               f'**Member:** {member} (`{member.id}`)\n' \
               f'**Total Members:** `{member.guild.member_count}`'
         await log_channel.send(msg)

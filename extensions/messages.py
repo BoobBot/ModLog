@@ -28,6 +28,9 @@ class MessageLog(Cog):
     @Cog.listener()
     @server_configured
     async def on_message_delete(self, message, log_channel):
+        if len(message.content) == 0:
+            return
+
         msg = f'📝 `{now()}` **Message Deleted** (ID: `{message.id}`)\n' \
               f'**Channel:** {message.channel.mention} (`{message.channel.id}`)\n' \
               f'**Author:** {message.author} (`{message.author.id}`)\n' \
