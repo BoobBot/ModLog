@@ -15,7 +15,7 @@ class MessageLog(Cog):
     @Cog.listener()
     @server_configured
     async def on_message_edit(self, before, after, log_channel):
-        if len(before.content) == len(after.content):
+        if before.content == after.content:
             return
 
         msg = f'📝 `{now()}` **Message Edited** (ID: `{before.id}`)\n' \
